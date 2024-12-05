@@ -16,6 +16,7 @@ class _ModalBottomSheet<T> extends StatefulWidget {
     this.expanded = false,
     this.enableDrag = true,
     this.animationCurve,
+    this.controller,
   });
 
   final double? closeProgressThreshold;
@@ -25,6 +26,7 @@ class _ModalBottomSheet<T> extends StatefulWidget {
   final bool enableDrag;
   final AnimationController? secondAnimationController;
   final Curve? animationCurve;
+  final ModalBottomSheetController? controller;
 
   @override
   _ModalBottomSheetState<T> createState() => _ModalBottomSheetState<T>();
@@ -123,6 +125,7 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
                 bounce: widget.bounce,
                 scrollController: scrollController,
                 animationCurve: widget.animationCurve,
+                controller: widget.controller,
               ),
             );
           },
@@ -149,6 +152,7 @@ class ModalSheetRoute<T> extends PageRoute<T> {
     this.animationCurve,
     Duration? duration,
     super.settings,
+    this.modalBottomSheetController,
   }) : duration = duration ?? _bottomSheetDuration;
 
   final double? closeProgressThreshold;
@@ -165,6 +169,8 @@ class ModalSheetRoute<T> extends PageRoute<T> {
 
   final AnimationController? secondAnimationController;
   final Curve? animationCurve;
+
+  final ModalBottomSheetController? modalBottomSheetController;
 
   @override
   Duration get transitionDuration => duration;
@@ -215,6 +221,7 @@ class ModalSheetRoute<T> extends PageRoute<T> {
         bounce: bounce,
         enableDrag: enableDrag,
         animationCurve: animationCurve,
+        controller: modalBottomSheetController,
       ),
     );
     return bottomSheet;
@@ -257,6 +264,7 @@ Future<T?> showCustomModalBottomSheet<T>({
   Duration? duration,
   RouteSettings? settings,
   double? closeProgressThreshold,
+  ModalBottomSheetController? controller,
 }) async {
   assert(debugCheckHasMediaQuery(context));
   assert(debugCheckHasMaterialLocalizations(context));
@@ -282,6 +290,7 @@ Future<T?> showCustomModalBottomSheet<T>({
     duration: duration,
     settings: settings,
     closeProgressThreshold: closeProgressThreshold,
+    modalBottomSheetController: controller,
   ));
   return result;
 }

@@ -9,6 +9,8 @@ import 'package:modal_bottom_sheet/src/utils/scroll_to_top_status_bar.dart';
 
 import 'package:modal_bottom_sheet/src/utils/bottom_sheet_suspended_curve.dart';
 
+import 'package:modal_bottom_sheet/src/utils/modal_bottom_sheet_controller.dart';
+
 const Curve _decelerateEasing = Cubic(0.0, 0.0, 0.2, 1.0);
 
 const Duration _bottomSheetDuration = Duration(milliseconds: 400);
@@ -48,6 +50,7 @@ class ModalBottomSheet extends StatefulWidget {
     double? closeProgressThreshold,
     @Deprecated('Use preventPopThreshold instead') double? willPopThreshold,
     double? preventPopThreshold,
+    this.controller,
   })  : preventPopThreshold =
             preventPopThreshold ?? willPopThreshold ?? _willPopThreshold,
         closeProgressThreshold =
@@ -113,6 +116,8 @@ class ModalBottomSheet extends StatefulWidget {
   /// The preventPopThreshold parameter
   /// Determines how far the sheet should be flinged before closing.
   final double preventPopThreshold;
+
+  final ModalBottomSheetController? controller;
 
   @override
   ModalBottomSheetState createState() => ModalBottomSheetState();
@@ -194,7 +199,11 @@ class ModalBottomSheetState extends State<ModalBottomSheet>
 
   void _handleDragUpdate(double primaryDelta) async {
     animationCurve = Curves.linear;
-    assert(widget.enableDrag, 'Dragging is disabled');
+    assert(
+        widget.controller != null
+            ? widget.controller!.enableDrag
+            : widget.enableDrag,
+        'Dragging is disabled');
 
     if (_dismissUnderway) return;
     isDragging = true;
@@ -225,7 +234,11 @@ class ModalBottomSheetState extends State<ModalBottomSheet>
   }
 
   void _handleDragEnd(double velocity) async {
-    assert(widget.enableDrag, 'Dragging is disabled');
+    assert(
+        widget.controller != null
+            ? widget.controller!.enableDrag
+            : widget.enableDrag,
+        'Dragging is disabled');
 
     animationCurve = BottomSheetSuspendedCurve(
       widget.animationController.value,
@@ -372,7 +385,9 @@ class ModalBottomSheetState extends State<ModalBottomSheet>
           widget.animationController.value,
         );
 
-        final draggableChild = !widget.enableDrag
+        final draggableChild = !(widget.controller != null
+                ? widget.controller!.enableDrag
+                : widget.enableDrag)
             ? child
             : KeyedSubtree(
                 key: _childKey,

@@ -22,6 +22,7 @@ Future<T?> showMaterialModalBottomSheet<T>({
   Duration? duration,
   RouteSettings? settings,
   double? closeProgressThreshold,
+  ModalBottomSheetController? controller,
 }) async {
   assert(debugCheckHasMediaQuery(context));
   assert(debugCheckHasMaterialLocalizations(context));
@@ -47,6 +48,7 @@ Future<T?> showMaterialModalBottomSheet<T>({
     animationCurve: animationCurve,
     duration: duration,
     settings: settings,
+    modalBottomSheetController: controller,
   ));
   return result;
 }
