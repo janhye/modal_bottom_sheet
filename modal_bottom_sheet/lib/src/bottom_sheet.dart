@@ -199,11 +199,9 @@ class ModalBottomSheetState extends State<ModalBottomSheet>
 
   void _handleDragUpdate(double primaryDelta) async {
     animationCurve = Curves.linear;
-    assert(
-        widget.controller != null
-            ? widget.controller!.enableDrag
-            : widget.enableDrag,
-        'Dragging is disabled');
+    if (!(widget.controller != null
+        ? widget.controller!.enableDrag
+        : widget.enableDrag)) return;
 
     if (_dismissUnderway) return;
     isDragging = true;
@@ -234,11 +232,9 @@ class ModalBottomSheetState extends State<ModalBottomSheet>
   }
 
   void _handleDragEnd(double velocity) async {
-    assert(
-        widget.controller != null
-            ? widget.controller!.enableDrag
-            : widget.enableDrag,
-        'Dragging is disabled');
+    if (!(widget.controller != null
+        ? widget.controller!.enableDrag
+        : widget.enableDrag)) return;
 
     animationCurve = BottomSheetSuspendedCurve(
       widget.animationController.value,
